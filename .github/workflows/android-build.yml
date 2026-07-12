@@ -15,15 +15,13 @@ jobs:
     - name: Set up Node.js Environment
       uses: actions/setup-node@v4
       with:
-        node-version: 20
+        node-version: 22
 
     - name: Clean Install Dependencies
       run: npm install --legacy-peer-deps
 
     - name: Compile Fresh Web Assets
-      run: |
-        chmod +x node_modules/.bin/vite
-        npm run build
+      run: npx vite build
 
     - name: Sync Capacitor Native Bridge
       run: npx cap sync android
