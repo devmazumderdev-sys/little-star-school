@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.littlestarschool.app" version="1.0.0" xmlns="http://www.w3.org/ns/widgets">
+    <name>Little Star School</name>
+    <description>Responsive School Application</description>
+    <author email="dev@example.com">Dev</author>
+    <content src="index.html" />
+    <preference name="Orientation" value="portrait" />
+    <preference name="Fullscreen" value="false" />
+</widget>
