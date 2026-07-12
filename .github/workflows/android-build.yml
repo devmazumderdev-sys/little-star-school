@@ -21,14 +21,16 @@ jobs:
     - name: Install Dependencies
       run: npm install --legacy-peer-deps
 
-    - name: Fix Vite Permissions and Build
+    - name: Build Web Assets
       run: |
         chmod +x ./node_modules/.bin/vite || true
         npx vite build
 
-    - name: Fix Capacitor Permissions and Sync
+    - name: Fresh Capacitor Android Setup
       run: |
         chmod +x ./node_modules/.bin/cap || true
+        rm -rf android
+        npx cap add android
         npx cap sync
 
     - name: Set up JDK 17
@@ -40,9 +42,14 @@ jobs:
     - name: Setup Gradle Environment
       uses: gradle/actions/setup-gradle@v3
 
-    - name: Automatic Android Tooling Fix & Build
+    - name: Clean and Build APK
       run: |
         cd android
         chmod +x gradlew
-        ./gradlew --no-daemon clean
-        ./gradlew --no-daemon assembleDebug --stacktrace --info
+        ./gradlew assembleDebug --no-daemon
+
+    - name: Upload APK Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: school-app-debug
+        path: android/app/build/outputs/apk/debug/app-debug.apk
