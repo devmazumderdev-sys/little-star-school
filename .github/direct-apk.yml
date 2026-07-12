@@ -1,4 +1,4 @@
-name: Error Free Android Build
+name: Direct Android Studio Compiler
 
 on:
   push:
@@ -9,40 +9,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Source Code
+    - name: 1. Fetch Latest Code From Git
       uses: actions/checkout@v4
 
-    - name: Set up Node.js Environment
-      uses: actions/setup-node@v4
-      with:
-        node-version: 22
-
-    - name: Clean Install Dependencies
-      run: npm install --legacy-peer-deps
-
-    - name: Compile Fresh Web Assets
-      run: npx vite build
-
-    - name: Sync Capacitor Native Bridge
-      run: npx cap sync android
-
-    - name: Setup Java JDK 17
+    - name: 2. Set Up Java JDK 17 Environment
       uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'zulu'
 
-    - name: Force Android SDK Versions (Auto Fix)
+    - name: 3. Initialize Gradle Automation Cache
+      uses: gradle/actions/setup-gradle@v3
+
+    - name: 4. Inject Verified Android SDK Versions
       run: |
         echo "ext { compileSdkVersion = 34; targetSdkVersion = 34; minSdkVersion = 22 }" > android/variables.gradle
 
-    - name: Execute Android Studio CLI Compiler
+    - name: 5. Execute Android Studio CLI Compiler
       run: |
         cd android
         chmod +x gradlew
         ./gradlew clean assembleDebug --no-daemon
         
-    - name: Deliver Finished APK Package
+    - name: 6. Upload and Deliver Final APK Package
       uses: actions/upload-artifact@v4
       with:
         name: Little-Star-School-App
